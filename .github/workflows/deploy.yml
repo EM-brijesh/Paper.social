@@ -42,18 +42,22 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Ensure Docker is running and ubuntu user has permissions
+          sudo systemctl start docker
+          sudo usermod -aG docker ubuntu
+          
           # Login to ECR
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
           
           # Pull the latest image
-          docker pull ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          sudo docker pull ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           
           # Stop and remove the old container if it exists
-          docker stop paper-social-app || true
-          docker rm paper-social-app || true
+          sudo docker stop paper-social-app || true
+          sudo docker rm paper-social-app || true
           
           # Run the new container
-          docker run -d \
+          sudo docker run -d \
             --name paper-social-app \
             --restart always \
             -p 3000:3000 \
