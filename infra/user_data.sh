@@ -21,6 +21,9 @@ echo \
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io
 
+# Add ubuntu user to docker group
+usermod -aG docker ubuntu
+
 # Install AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 apt-get install -y unzip
