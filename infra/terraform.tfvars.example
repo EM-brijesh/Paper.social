@@ -1,0 +1,21 @@
+# AWS Region (optional, defaults to ap-south-1)
+region = "ap-south-1"
+
+# Name of your existing EC2 key pair
+key_name = "your-key-pair-name"
+
+# List of IP addresses allowed to SSH into the instance
+# Replace with your actual IP address for security
+allowed_ssh_ips = ["your-ip-address/32"]  # Example: "123.45.67.89/32"
+
+# Instance type (optional, defaults to t2.micro)
+instance_type = "t2.micro"
+
+# Environment name (optional, defaults to dev)
+environment = "dev"
+
+# Root volume size in GB (optional, defaults to 8)
+root_volume_size = 8
+
+# Root volume type (optional, defaults to gp2)
+root_volume_type = "gp2" 
