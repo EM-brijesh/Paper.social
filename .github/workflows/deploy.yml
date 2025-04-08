@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-south-1
-  ECR_REPOSITORY: paper-social
+  ECR_REPOSITORY: paper_social
 
 jobs:
   deploy:
