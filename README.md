@@ -3,7 +3,7 @@
 A social media application built with Node.js and Express, deployed on AWS using Terraform.
 
 ## Project Structure
-heelo
+Hello Brijesh
 
 ```
 .
