@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Basic route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the Paper.social application!' });
+  res.json({ message: 'Welcome to the Paper.Social application!' });
 });
 
 // Start server
