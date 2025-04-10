@@ -129,9 +129,9 @@ resource "aws_iam_instance_profile" "cw_agent_profile" {
 }
 
 # User data script
-data "template_file" "user_data" {
-  template = file("${path.module}/user_data.sh")
-}
+#data "template_file" "user_data" {
+#  template = file("${path.module}/user_data.sh")
+#}
 
 # EC2 instance
 resource "aws_instance" "web" {
@@ -141,7 +141,7 @@ resource "aws_instance" "web" {
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.cw_agent_profile.name
-  user_data                   = data.template_file.user_data.rendered
+  #user_data                   = data.template_file.user_data.rendered
   monitoring                  = false  # Disable detailed monitoring to save costs
 
   root_block_device {
