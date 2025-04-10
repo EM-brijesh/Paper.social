@@ -101,7 +101,7 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-# IAM Role for CloudWatch Agent
+# IAM Role for EC2 (CloudWatch + ECR access)
 resource "aws_iam_role" "cw_agent_role" {
   name = "paper-social-cloudwatch-agent-role"
   assume_role_policy = jsonencode({
@@ -118,20 +118,23 @@ resource "aws_iam_role" "cw_agent_role" {
   })
 }
 
+# Attach CloudWatch agent policy
 resource "aws_iam_role_policy_attachment" "cw_agent_attach" {
   role       = aws_iam_role.cw_agent_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
+# ✅ Attach ECR read-only access
+resource "aws_iam_role_policy_attachment" "cw_agent_ecr_access" {
+  role       = aws_iam_role.cw_agent_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+# IAM instance profile for EC2
 resource "aws_iam_instance_profile" "cw_agent_profile" {
   name = "paper-social-cloudwatch-agent-profile"
   role = aws_iam_role.cw_agent_role.name
 }
-
-# User data script
-#data "template_file" "user_data" {
-#  template = file("${path.module}/user_data.sh")
-#}
 
 # EC2 instance
 resource "aws_instance" "web" {
@@ -141,7 +144,6 @@ resource "aws_instance" "web" {
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.cw_agent_profile.name
-  #user_data                   = data.template_file.user_data.rendered
   monitoring                  = false  # Disable detailed monitoring to save costs
 
   root_block_device {
@@ -156,7 +158,7 @@ resource "aws_instance" "web" {
   }
 }
 
-# Elastic IP
+# Elastic IP for EC2
 resource "aws_eip" "web" {
   instance = aws_instance.web.id
   vpc      = true
