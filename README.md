@@ -17,6 +17,18 @@ Hello Brijesh
 ├── .gitignore         # Git ignore rules
 └── README.md          # Project documentation
 ```
+## 🌐 Live Application
+
+🔗 [http://15.207.63.180:3000/](http://15.207.63.180:3000/)  
+> _(Note: Use a domain + HTTPS via Let's Encrypt to secure in production)_
+
+---
+
+## 📊 Monitoring Dashboard
+
+AWS CloudWatch Agent installed on EC2.  
+➡️ Metrics can be accessed via CloudWatch Dashboard [https://cloudwatch.amazonaws.com/dashboard.html?dashboard=paper_social&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTE2NTgzNjQ5MzIxNCIsIlUiOiJ1cy1lYXN0LTFfanJ4UEZxWG52IiwiQyI6IjFmcGwwb25wZnRzbGV1cWR1N2ZjNDhkbm9tIiwiSSI6InVzLWVhc3QtMTplYWZmN2ZkNy1jNjA2LTRjMzktYTc2Yy03OWE5MGM4ZWYxMGQiLCJNIjoiUHVibGljIn0=]
+
 
 ## Prerequisites
 
@@ -69,21 +81,50 @@ Start the development server:
 npm run dev
 ```
 
-## Infrastructure
+## ✅ Features Covered (Per Assessment)
 
-The infrastructure is managed using Terraform and includes:
-- VPC with public subnet
-- EC2 instance (t2.micro)
-- Security groups
-- CloudWatch monitoring
-- IAM roles and policies
+### 1. 🔨 Infrastructure as Code (Terraform)
 
-## Security
+- Provisioned EC2 instance in public subnet
+- VPC, subnet, internet gateway, route tables
+- IAM Role with access to:
+  - CloudWatch
+  - Amazon ECR
+- Security Group to expose ports 22, 80, 3000
+- **Modular code ready for reuse**
 
-- SSH access is restricted to specific IP addresses
-- Environment variables are not tracked in version control
-- AWS credentials are managed through AWS CLI
+---
 
+### 2. ⚙️ Configuration Management (Ansible)
+
+- Docker installed
+- AWS CLI (v2) installed via zip method
+- CloudWatch agent installed and configured
+- Ubuntu user added to docker group
+- All automated with one-liner: `./run.sh`
+
+---
+
+### 3. 🚀 CI/CD (GitHub Actions)
+
+- On push to `master`, GitHub Actions:
+  - Configures AWS CLI
+  - Logs in to ECR
+  - Builds Docker image
+  - Pushes to ECR
+  - SSHs into EC2
+  - Pulls & runs latest container
+
+```yaml
+- uses: appleboy/ssh-action@master
+  with:
+    host: ${{ secrets.EC2_HOST }}
+    username: ubuntu
+    key: ${{ secrets.EC2_SSH_KEY }}
+    script: |
+      docker pull ...
+      docker stop ... || true
+      docker run ...
 ## License
 
 MIT 
