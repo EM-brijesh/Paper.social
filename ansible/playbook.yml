@@ -1,0 +1,56 @@
+---
+- name: Configure Paper Social Server
+  hosts: all
+  become: true
+  vars:
+    aws_region: ap-south-1
+    cloudwatch_agent_version: latest
+
+  roles:
+    - role: geerlingguy.docker
+    - role: geerlingguy.aws-cli
+
+  tasks:
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Download CloudWatch agent
+      get_url:
+        url: "https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/{{ cloudwatch_agent_version }}/amazon-cloudwatch-agent.deb"
+        dest: /tmp/amazon-cloudwatch-agent.deb
+        mode: '0755'
+
+    - name: Install CloudWatch agent
+      apt:
+        deb: /tmp/amazon-cloudwatch-agent.deb
+        state: present
+
+    - name: Create CloudWatch agent config directory
+      file:
+        path: /opt/aws/amazon-cloudwatch-agent/etc
+        state: directory
+        mode: '0755'
+
+    - name: Configure CloudWatch agent
+      template:
+        src: templates/amazon-cloudwatch-agent.json.j2
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+        mode: '0644'
+
+    - name: Start CloudWatch agent
+      systemd:
+        name: amazon-cloudwatch-agent
+        state: started
+        enabled: yes
+
+    - name: Verify CloudWatch agent status
+      command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a status
+      register: cloudwatch_status
+      changed_when: false
+
+    - name: Display CloudWatch agent status
+      debug:
+        var: cloudwatch_status.stdout_lines 
