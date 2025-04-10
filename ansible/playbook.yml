@@ -16,6 +16,30 @@
         groups: docker
         append: yes
 
+    # ✅ Install unzip (required for AWS CLI zip extraction)
+    - name: Install unzip package
+      apt:
+        name: unzip
+        state: present
+
+    # ✅ Install AWS CLI v2 manually
+    - name: Download AWS CLI v2 installer
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+
+    - name: Unzip AWS CLI installer
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install AWS CLI v2
+      command: /tmp/aws/install
+      args:
+        creates: /usr/local/bin/aws
+
+    # ✅ Install CloudWatch Agent
     - name: Download CloudWatch agent
       get_url:
         url: "https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/{{ cloudwatch_agent_version }}/amazon-cloudwatch-agent.deb"
@@ -52,4 +76,4 @@
 
     - name: Display CloudWatch agent status
       debug:
-        var: cloudwatch_status.stdout_lines 
+        var: cloudwatch_status.stdout_lines
