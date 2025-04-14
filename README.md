@@ -17,17 +17,11 @@ Hello Brijesh
 ├── .gitignore         # Git ignore rules
 └── README.md          # Project documentation
 ```
-## 🌐 Live Application
 
-🔗 [http://15.207.63.180:3000/](http://15.207.63.180:3000/)  
-> _(Note: Use a domain + HTTPS via Let's Encrypt to secure in production)_
-
----
 
 ## 📊 Monitoring Dashboard
 
 AWS CloudWatch Agent installed on EC2.  
-➡️ Metrics can be accessed via CloudWatch Dashboard [https://cloudwatch.amazonaws.com/dashboard.html?dashboard=paper_social&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTE2NTgzNjQ5MzIxNCIsIlUiOiJ1cy1lYXN0LTFfanJ4UEZxWG52IiwiQyI6IjFmcGwwb25wZnRzbGV1cWR1N2ZjNDhkbm9tIiwiSSI6InVzLWVhc3QtMTplYWZmN2ZkNy1jNjA2LTRjMzktYTc2Yy03OWE5MGM4ZWYxMGQiLCJNIjoiUHVibGljIn0=]
 
 
 ## Prerequisites
